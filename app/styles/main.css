@@ -1,0 +1,14 @@
+.main-header {
+    background-color: black;
+    min-height: 60px;
+    position: relative;
+    z-index: 20;
+}
+
+.main-header .logo {
+    display: block;
+    float: left;
+    height: 60px;
+    margin-left: 0.4rem;
+    width: 240px;
+}

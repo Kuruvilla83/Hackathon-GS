@@ -1,0 +1,155 @@
+	
+<div class="col-md-6 col-md-offset-3" ng-controller="ProfileController" ng-hide="stepTwoReady">
+	<form name="form" ng-submit="SubmitBusinessIdea()" role="form">
+		<div class="form-group" ng-class="{ 'has-error': form.name.$dirty && form.name.$error.required }">
+			<label for="name">What is the name for your business?</label>
+            <input type="text" name="name" id="name" class="form-control" ng-model="name" required />
+            <span ng-show="form.name.$dirty && form.name.$error.required" class="help-block">Business name is required</span>
+		</div>
+		<div class="form-group" ng-class="{ 'has-error': form.idea.$dirty && form.idea.$error.required }">
+			<label for="idea">What is the business idea?</label>
+            <textarea name="idea" id="idea" class="form-control" ng-model="idea" required></textarea>
+            <span ng-show="form.idea.$dirty && form.idea.$error.required" class="help-block">Business Idea is required</span>
+		</div>
+		<div class="form-group" ng-class="{ 'has-error': form.problem.$dirty && form.problem.$error.required }">
+			<label for="problem">What need or problem does your idea fill/solve?</label>
+            <textarea name="problem" id="problem" class="form-control" ng-model="problem" required></textarea>
+            <span ng-show="form.problem.$dirty && form.problem.$error.required" class="help-block">Problem being solved is required</span>
+		</div>
+		<div class="form-group">			
+			<input type="file" file-model = "logo" id="file-upload" name="file" onchange="angular.element(this).scope().uploadFile(this.files)"/>
+			<img id="output-image" src="icons/def_logo.jpg"/>
+		</div>
+		
+		<div class="form-group">
+			<p>Select Industry</p>
+			<select name="industry" class="form-control" ng-model="industry" ng-options="ind.value for ind in industries" required>
+			</select>
+			<input ng-show="industry.value == 'Other'" type="text" name="industryOther" id="industryOther" class="form-control" ng-model="industryOther" />
+			<p>Select Sub-Industry</p>
+			<select name="subIndustry" class="form-control" ng-model="subIndustry" ng-options="subInd.value for subInd in industry.subInd" required>
+			</select>
+			<input ng-show="subIndustry.value == 'Other'" type="text" name="subIndOther" id="subIndOther" class="form-control" ng-model="subIndOther" />
+		</div>
+		<div class="form-group" ng-class="{ 'has-error': form.description.$dirty && form.description.$error.required }">
+			<label for="description">Please enter a description of your business.</label>
+			<textarea name="description" id="description" class="form-control" ng-model="description" required></textarea>
+			<span ng-show="form.description.$dirty && form.description.$error.required" class="help-block">Description is required</span>
+		</div>
+		<div class="form-actions">
+            <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-primary">Submit</button>
+        </div>
+	</form>
+	<script type="text/ng-template" id="dialogtmpl.html">
+		<md-dialog>
+			<md-dialog-content>
+				<div class="md-dialog-content">
+					<h3>Congratulations!</h3>
+					<p><b>You have finished step 1 of creating your business plan.</b></p>
+					<p><b>You have earned<div class="pts">{{pts}}</div> <div class="points">{{pts}}</div> points</b></p>
+				</div>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<a href="#/home"><md-button type="button" class="btn btn-primary" ng-click="exit()">Save & Exit</md-button></a>
+				<md-button type="button" class="btn btn-primary" ng-click="continuePlan()">Continue</md-button>
+			</md-dialog-actions>
+		</md-dialog>
+	</script>
+</div>
+
+
+
+<div class="col-md-6 col-md-offset-3" ng-controller="ProfileController" ng-show="stepTwoReady">
+	
+	<form name="formtwo" ng-submit="SubmitStepTwo()" role="form">
+	<input id="indId" type="hidden" value="{{industryId}}" />
+		<h3>Target Market</h3>
+		<div class="form-group" ng-class="{ 'has-error': formtwo.target.$dirty && formtwo.target.$error.required }">
+			<label for="target">What is your target audience?</label>
+			<textarea name="target" id="target" class="form-control" ng-model="target" required></textarea>
+			<span ng-show="formtwo.target.$dirty && formtwo.target.$error.required" class="help-block">Target audience is required</span>
+		</div>
+		
+		<div class="form-group" ng-class="{ 'has-error': formtwo.gender.$dirty && formtwo.gender.$error.required }">
+			<label for="gender">Select gender of your target market.</label>
+			<select name="gender" class="form-control" ng-model="gender" required>
+				<option ng-repeat="gender in genderOptions">{{gender}}<option>
+			</select>
+			<span ng-show="formtwo.gender.$dirty && formtwo.gender.$error.required" class="help-block">Gender is required</span>
+		</div>
+		
+		<div class="form-group" ng-class="{ 'has-error': formtwo.age.$dirty && formtwo.age.$error.required }">
+			<label for="age">Select what age group you are targeting.</label>
+			<select name="age" class="form-control" ng-model="age" required>
+				<option ng-repeat="age in ageOptions">{{age}}<option>
+			</select>
+			<span ng-show="formtwo.age.$dirty && formtwo.age.$error.required" class="help-block">Age group is required</span>
+		</div>
+		
+		<div class="form-group" ng-class="{ 'has-error': formtwo.city.$dirty && formtwo.city.$error.required }">
+			<label for="city">In what city do you plan to operate your business?</label>
+			<input type="text" name="city" id="city" class="form-control" ng-model="city" required />
+			<span ng-show="formtwo.city.$dirty && formtwo.city.$error.required" class="help-block">City is required</span>
+		</div>
+		
+		<div class="form-group" ng-class="{ 'has-error': formtwo.state.$dirty && formtwo.state.$error.required }">
+			<label for="state">In what state do you plan to operate your business?</label>
+			<input type="text" name="state" id="state" class="form-control" ng-model="state" required />
+			<span ng-show="formtwo.state.$dirty && formtwo.state.$error.required" class="help-block">State is required</span>
+		</div>
+		
+		<div class="form-group" ng-class="{ 'has-error': formtwo.locationType.$dirty && formtwo.locationType.$error.required }">
+			<label for="locationType">Will your business have a virtual location or a physical location or both?</label>
+			<select name="locationType" class="form-control" ng-model="locationType"  required>
+				<option ng-repeat="locType in locTypes">{{locType}}</option>
+			</select>
+			<span ng-show="formtwo.locationType.$dirty && formtwo.locationType.$error.required" class="help-block">Location type is required</span>
+		</div>
+		
+		<div class="form-group" ng-class="{ 'has-error': formtwo.competition.$dirty && formtwo.competition.$error.required }">
+			<label for="competition">How many other similar businesses exist in your market?</label>
+			<select name="comp" class="form-control" ng-model="comp" required>
+				<option ng-repeat="comp in competitionList">{{comp}}</option>
+			</select>
+			<span ng-show="formtwo.competition.$dirty && formtwo.competition.$error.required" class="help-block">Amount of competition is required</span>
+		</div>
+		
+		<h3>Expenses</h3>
+		
+		<div class="form-group expense" style="width: 100%; margin: auto; padding: 5px">
+			<div>
+				<h4>Total: $<span id="total" ng-model="total" ng-init="total=0">{{total}}</span></h4>
+			</div>
+		</div>
+		
+		<h3>Promotions</h3>
+		<div class="form-group" ng-class="{ 'has-error': formtwo.website.$dirty && formtwo.website.$error.required }">
+			<label for="website">How do you plan on reaching your audience through your website?</label>
+			<textarea name="website" id="website" class="form-control" ng-model="website" required></textarea>
+			<span ng-show="formtwo.website.$dirty && formtwo.website.$error.required" class="help-block">Website information is required</span>
+		</div>
+		
+		<div class="form-group" ng-class="{ 'has-error': formtwo.social.$dirty && formtwo.social.$error.required }">
+			<label for="social">How do you plan on reaching your audience through social media?</label>
+			<textarea name="social" id="social" class="form-control" ng-model="social" required></textarea>
+			<span ng-show="formtwo.social.$dirty && formtwo.social.$error.required" class="help-block">Social media information is required</span>
+		</div>
+		
+		<div class="form-group" ng-class="{ 'has-error': formtwo.marketing.$dirty && formtwo.marketing.$error.required }">
+			<label for="marketing">What is your marketing strategy to reaching your audience?</label>
+			<textarea name="marketing" id="marketing" class="form-control" ng-model="marketing" required></textarea>
+			<span ng-show="formtwo.marketing.$dirty && formtwo.marketing.$error.required" class="help-block">Marketing information is required</span>
+		</div>
+		
+		<div class="form-group" ng-class="{ 'has-error': formtwo.advertise.$dirty && formtwo.advertise.$error.required }">
+			<label for="advertise">What is your advertising strategy to reaching your audience?</label>
+			<textarea name="advertise" id="advertise" class="form-control" ng-model="advertise" required ></textarea>
+			<span ng-show="formtwo.advertise.$dirty && formtwo.advertise.$error.required" class="help-block">Advertising information is required</span>
+		</div>
+		
+		<div class="form-actions">
+            <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-primary">Submit</button>
+        </div>
+	</form>
+	
+</div>

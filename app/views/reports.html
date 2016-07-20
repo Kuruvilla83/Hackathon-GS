@@ -1,0 +1,53 @@
+<script src="https://rawgithub.com/eligrey/FileSaver.js/master/FileSaver.js" type="text/javascript"></script>
+<div ng-controller="reportsCtrl">
+    <button ng-click="exportData()" ng-show="(items|filter:{selected: true}).length">Export</button>
+    <br />
+    <table width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Terms</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in items">
+                    <td><input type="checkbox" ng-model="item.selected" /></td>
+                    <td>{{item.Name}}</td>
+                    <td>{{item.Date}}</td>
+                    <td><span ng-repeat="term in item.Terms">{{term}}{{!$last?', ':''}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    <div id="exportable" style="display:none">
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Terms</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in items|filter:{selected: true}">
+                    <td>{{item.Name}}</td>
+                    <td>{{item.Date}}</td>
+                    <td><span ng-repeat="term in item.Terms">{{term}}{{!$last?', ':''}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div ng-controller="gridListDemoCtrl" ng-init="load()">	
+
+ <div ng-repeat="dat in buss" >
+ <div> {{ dat.name }}</div>
+
+			<div >Business Idea: {{idea}}</div>
+			<div >Problem: {{problem}}</div>
+			
+			<div>{{deindustry}}</div>
+			<div>{{desubcategory}}</div>
+			<div>{{description}}</div>
+			</div></div>

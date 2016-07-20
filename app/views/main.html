@@ -1,0 +1,189 @@
+<div class="mainBlock" ng-controller="LoginShowCtrl" ng-show="goCats">		
+	<div class="mainBlock_title">Please login to Hackthone Green Harvest ERP</div>	  
+	<div>
+	<a class="mainBlock_button" href="/students/sign_in" ><div class="maincon">Login</div></a>
+	<a class="mainBlock_button" href="/students/sign_up?return_to=https://ct-staging.hyfnrsx1.com/dashboard?type=tool" ><div class="maincon">Sign Up</div></a>
+	</div>	
+</div>
+<div class="mainBlockLog" ng-controller="LoginShowCtrl" ng-show="goDogs">
+	<div class="mainBlock_title" ng-controller="LoginShowCtrl" ng-show="goDogs">Welcome to Hackthone Green Harvest ERP</div>
+</div>
+	
+<div ng-controller="gridListDemoCtrl" ng-init="load()">	
+<div class="business" ng-repeat="da in buss" >
+<d-expand-collapse>
+	<div class="tog">
+		<span class="faqPlus">
+			<a href="javascript:void(0)" >
+			<div id= "bor" class="first{{$index%2}}" ng-click="detailTask($index)">{{ da.name }}</div>				
+			</a>
+		</span>
+	</div>
+	<div class="businessDe">
+		<div class="details" id="printthis" ng-show="hdetail">
+			<div class="detailWrapper"><span class="detailTitles">Business Idea: </span><span class="idea">{{idea}}</span></div>
+			<div class="detailWrapper"><span class="detailTitles">Problem: </span><span class="problem">{{problem}}</span></div>
+			<div class="detailWrapper"><span class="detailTitles">Logo: </span><img class="logo" src="{{logo}}" alt="Add Logo"></img></div>
+			<div class="detailWrapper"><span class="detailTitles">Industry: </span><span class="industry">{{deindustry}}</span></div>
+			<div class="detailWrapper"><span class="detailTitles">Sub-Industry: </span><span class="subIndustry">{{desubcategory}}</span></div>
+			<div class="detailWrapper"><span class="detailTitles">Description: </span><span class="description">{{description}}</span></div>
+			<span  ng-click="editing = true"> <button value="Send" ng-click="openEdit(da.id)" class="btn btn-warning">Edit</button></span>
+			<span  ng-click="editing = true"> <button value="Send" ng-click="printPage()" class="btn btn-info">Print</button></span>
+			<span ng-controller="deleteserviceCtrl"> <button value="Send" ng-click="deletedata(da.id, name, data)" class="btn btn-danger" id="deleteDanger">Delete</button></span>		
+			
+				<div ng-cloak>
+				  <md-content>
+					<md-tabs md-dynamic-height md-border-bottom>
+					  <md-tab label="Market">
+						<md-content class="md-padding">
+						  <h1 class="md-display-2">Market</h1>
+							<div class="detailWrapper"><span class="detailTitles">Target Market: </span><span class="target">{{target}}</span></div>
+							<div class="detailWrapper"><span class="detailTitles">Gender: </span><span class="gender">{{gender}}</span></div>
+							<div class="detailWrapper"><span class="detailTitles">age: </span><span class="gender">{{age}}</span></div>
+							<div class="detailWrapper"><span class="detailTitles">city: </span><span class="city">{{city}}</span></div>
+							<div class="detailWrapper"><span class="detailTitles">State: </span><span class="state">{{state}}</span></div>
+							<div class="detailWrapper"><span class="detailTitles">Location Type: </span><span class="location">{{location}}</span></div>
+							<div class="detailWrapper"><span class="detailTitles">Competition: </span><span class="comp">{{comp}}</span></div>
+			
+							
+						</md-content>
+					  </md-tab>
+						<md-tab label="Expenses">
+						<md-content class="md-padding">
+						  <div ng-repeat="tab in expense_rows">
+                            <h3 style="text-align:center">{{tab.expense_cat}}</h3>		                            <h3>{{tab.expense_cat}}</h3>
+                            <table class="table" style="width:40%; margin:auto">
+                                <thead>
+                                    <tr><td>Item</td><td>Qty</td><td>Price</td></tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="row in tab.rows">
+                                        <td>{{row.item}}</td>
+                                        <td>{{row.qty}}</td>
+                                        <td>{{row.amt}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                          </div>
+						   <h3 style="text-align:center">Total: $<span id="total" ng-model="total">{{total}}</span></h3>
+						</md-content>
+					  </md-tab>
+					  <md-tab label="Promotions">
+						<md-content class="md-padding">
+						  <h1 class="md-display-2">Promotions</h1>
+						  <div class="detailWrapper"><span class="detailTitles">Website: </span><span class="website">{{target}}</span></div>
+							<div class="detailWrapper"><span class="detailTitles">Social Media: </span><span class="social">{{social}}</span></div>
+							<div class="detailWrapper"><span class="detailTitles">Marketing: </span><span class="marketing">{{marketing}}</span></div>
+							<div class="detailWrapper"><span class="detailTitles">Advertise: </span><span class="advertise">{{advertise}}</span></div>
+							
+						</md-content>
+					  </md-tab>
+					</md-tabs>
+				  </md-content>
+				</div>			
+		</div>
+		<div class="editDetails" ng-show="sedit">				  
+		<div class="col-md-6 col-md-offset-3" ng-controller="editController">
+			 <form ng-show="editing" ng-submit="editing = true;">			
+				<label for="name">What is the name for your business?</label>
+				<input type="text" id="name" ng-model="name" class="editControl" placeholder="Name" ng-required/>
+				<label for="idea">What is the business idea?</label>
+				<textarea id="idea" ng-model="idea" class="editControl" placeholder="Idea" ng-required/></textarea>					
+				<label for="problem">What need or problem does your idea fill/solve?</label>
+				<textarea id="problem" ng-model="problem" class="editControl" placeholder="Problem" ng-required/></textarea>
+				<div>			
+				<input type="file" file-model = "logo" id="edit-upload" class="file-upload" name="file" onchange="angular.element(this).scope().EditUploadFile(this.files)"/>
+				
+				<img class="edit_logo" file-model = "logo" src="{{logo}}" alt="Add Logo"></img>
+				
+				</div>
+				<p>Select Industry</p>
+				<select id="industry" ng-model="industry" ng-selected="industry" ng-options="ind.value for ind in industries" class="editControl"  required></select>
+				<input ng-show="industry.value == 'Other'" type="text" name="industryOther" id="industryOther" class="editControl"  ng-model="industryOther" />				
+				<p>Select Sub-Industry</p>
+				<select id="subIndustry" ng-model="subcategory" ng-options="subInd.value for subInd in industry.subInd" class="editControl" required>
+				</select>	</br>			
+				<input ng-show="subcategory.value == 'Other'" type="text" name="subIndOther" id="subIndOther" class="editControl" ng-model="subIndOther" />
+				<label for="description">Please enter a description of your business.</label>
+				<textarea id="description" ng-model="description" placeholder="Description" class="editControl" ng-required/></textarea>
+				<br/>
+				<h3> Target </h3>
+				<label for="target">What is your target audience?</label>
+				<textarea id="target" ng-model="target" placeholder="target" class="editControl" ng-required/></textarea>
+				<br/>
+				<p>Select gender of your target market.</p>				
+				<select id="gender" ng-model="gender" required>
+				<option ng-repeat="gender in genderOptions">{{gender}}<option>
+				</select><br/>
+				<p>Select what age group you are targeting.</p>				
+				<select id="age" ng-model="age" required>
+				<option ng-repeat="age in ageOptions">{{age}}<option>
+				</select>				
+				</br>
+				<label for="city">In what city do you plan to operate your business?</label>
+				<input type="text" id="city" ng-model="city" class="editControl" placeholder="City" ng-required/>
+				<label for="state">In what state do you plan to operate your business?</label>
+				<input type="text" id="state" ng-model="state" class="editControl" placeholder="State" ng-required/>
+				<p>Will your business have a virtual location or a physical location or both?</p>				
+				<select id="locationType" ng-model="location"  required>
+				<option ng-repeat="locType in locTypes">{{locType}}</option>
+				</select>				
+				</br>				
+				<p>How many other similar businesses exist in your market?</p>			
+				<select id="competition" ng-model="comp" required>
+				<option ng-repeat="comp in competitionList">{{comp}}</option>
+				</select>				
+				</br>
+				<h3>Expenses</h3>
+		                <div ng-repeat="tab in expense_rows">
+		                    <h3>{{tab.expense_cat}}</h3>
+		                    <table class="table" id="edit{{tab.index}}">
+		                        <thead>
+		                            <tr>
+		                            <th></th>
+		                            <th></th>
+		                            <th>
+		                            <button type="button" class="btn btn-add btn-primary">Add</button>
+		                            </th>
+		                            </tr>
+		                            <tr><th>Item</th><th>Qty</th><th>Price</th></tr>
+		                        </thead>
+		                        <tbody>
+		                            <tr ng-repeat="row in tab.rows">
+		                                <td><input id="item" name="item" type="text" ng-model="row.item" value="{{row.item}}" /></td>
+		                                <td><input id="qty" name="qty" type="text" ng-model="row.qty" value="{{row.qty}}" /></td>
+		                                <td><input id="price" name="price" type="text" ng-model="row.amt" value="{{row.amt}}" /></td>
+		                            </tr>
+		                        </tbody>
+		                    </table>
+		                </div>
+				<h3>Promotions</h3>
+				<label for="website">How do you plan on reaching your audience through your website?<label>
+				<textarea id="website" ng-model="website" placeholder="Website" class="editControl" ng-required/></textarea>
+				<br/>
+				<label for="social">How do you plan on reaching your audience through social media?<label>
+				<textarea id="social" ng-model="social" placeholder="Social" class="editControl" ng-required/></textarea>
+				<br/>
+				<label for="marketing">What is your marketing strategy to reaching your audience?<label>
+				<textarea id="marketing" ng-model="marketing" placeholder="Marketing" class="editControl" ng-required/></textarea>
+				<br/>
+				<label for="advertise">What is your advertising strategy to reaching your audience?<label>
+				<textarea id="advertise" ng-model="advertise" placeholder="Advertise" class="editControl" ng-required/></textarea>
+				<br/>
+				
+				<button type="submit"  ng-click="editBusinessIdea(da.id)" class="btn btn-primary"><a href="#/"></a>Submit</button>
+				<button class="btn btn-default" ng-click="cancelEdit()">Cancel</button>
+			 </form>	
+		</div>			
+		</div>		
+	 </div>	
+</d-expand-collapse>
+</div>
+<div class="newpro" ng-controller="LoginShowCtrl" ng-show="goDogs" ><a ng-href="#/profile"><img style="display: block;" alt="Get Schooled " src="icons/addIcon.jpg"></a></div>
+<div class="blank"> </div>
+</div>
+	
+
+ 
+
+ 
