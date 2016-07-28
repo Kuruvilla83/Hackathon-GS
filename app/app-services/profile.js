@@ -166,6 +166,8 @@ angular.module('gsApp')
 	$scope.points = "0";
 	
 	$scope.SubmitBusinessIdea = function () {
+		$('#loading').css('display','block');
+		$('.business').css({'opacity': '0.3', 'pointers-events': 'none'});
 		$rootScope.industryId = $scope.industry.id;
 		var res = {
 		   idea: $scope.idea,
@@ -199,6 +201,8 @@ angular.module('gsApp')
 		pname = data.name;
 		$scope.dialog();
 		scoringSubmit();
+		$('#loading').css('display','none');
+		$('.business').css({'opacity': '1', 'pointers-events': 'auto'});
 	});
 	
 	
@@ -289,8 +293,8 @@ angular.module('gsApp')
 	};
 	
 	$scope.SubmitStepTwo = function (ev) {
-		
-	    
+		$('#loading').css('display','block');
+		$('.business').css({'opacity': '0.3', 'pointers-events': 'none'});	    
 		var result = {
 			idea: pidea,
 			problem: pproblem,
@@ -327,6 +331,8 @@ angular.module('gsApp')
 				console.log(data);
 				$scope.dialogTwo(ev);
 				scoringFinalSubmit();
+				$('#loading').css('display','none');
+				$('.business').css({'opacity': '1', 'pointers-events': 'auto'});
 			})
 
 	};
@@ -355,7 +361,7 @@ angular.module('gsApp')
 		pts = response.points_earned;
 		total_pts = response.total_points;
 		document.getElementById("pts").innerHTML = "You have earned " +pts + " points";
-		document.getElementById("total_pts").innerHTML = total_pts;		
+		//document.getElementById("total_pts").innerHTML = total_pts;		
 		
 		}) 		
 	};
@@ -370,7 +376,7 @@ angular.module('gsApp')
 		pts = response.points_earned;
 		total_pts = response.total_points;
 		document.getElementById("pts-two").innerHTML = "You have earned " +pts + " points";
-		document.getElementById("total_pts").innerHTML = "Total Points earned: " +total_pts;	
+		//document.getElementById("total_pts").innerHTML = "Total Points earned: " +total_pts;	
 		})
 	};
 	

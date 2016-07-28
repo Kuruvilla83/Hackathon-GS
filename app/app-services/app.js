@@ -76,12 +76,12 @@ angular.module('gsApp')
     }  
     var buss, items, det = [];
     var id, name, idea, problem, industry, subCat, logo, desc, subOtherCat, otherindustry;
-    $scope.load = function () {        
+    $scope.load = function () {
+		$('#loading').css('display','block');        
         $http.get(API_ROOT+'saves?access_token='+ access_token)
         .success(function (data) {
         $scope.buss = data;	
-		
-            console.log(data)		
+		$('#loading').css('display','none');         		
         });
         return buss;			
     };
@@ -303,6 +303,8 @@ angular.module('gsApp')
 	};
     
     $scope.editBusinessIdea = function (taskId, ev) {
+		$('#loading').css('display','block');
+		$('.business').css({'opacity': '0.3', 'pointers-events': 'none'});
         $scope.sedit = true; 
 		//alert($scope.logo +"  "+ get_url);
 		var res = {
@@ -335,8 +337,10 @@ angular.module('gsApp')
             headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
             data: 'name='+$scope.name+
                   '&data='+JSON.stringify(res)
-        }).success(function (data, ev) {
+        }).success(function (data, ev) {					
 			$scope.showConfirm(ev, data);
+			$('#loading').css('display','none');
+			$('.business').css({'opacity': '1', 'pointers-events': 'auto'});
         });		
     };
 	

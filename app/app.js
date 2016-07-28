@@ -38,7 +38,7 @@ angular
   })
 var API_ROOT = "https://ct-staging.hyfnrsx1.com/api/hackathon/";
 
-
+$('.loading').hide;
 var token = window.location.toString();
 //var val = "21e532f9ccdafb6c9cbb3e6d54251893ad65b9eb68748015f5eb144eeff88d4a"; 
 

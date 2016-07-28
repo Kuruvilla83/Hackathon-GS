@@ -12,6 +12,7 @@
 </div>
 	
 <div ng-controller="gridListDemoCtrl" ng-init="load()">	
+		
 <div class="business" ng-repeat="da in buss" >
 <d-expand-collapse>
 	<div id= "bor{{da.id}}" class="tog">
@@ -85,6 +86,7 @@
 		</div>
 		<div class="editDetails" ng-show="sedit">				  
 		<div class="col-md-6 col-md-offset-3" ng-controller="editController">
+			
 			 <form ng-show="editing" ng-submit="editing = true;">			
 				<label for="name">What is the name for your business?</label>
 				<input type="text" id="name" ng-model="name" class="editControl" placeholder="Name" ng-required/>
