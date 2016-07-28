@@ -37,16 +37,30 @@ angular
       });
   })
 var API_ROOT = "https://ct-staging.hyfnrsx1.com/api/hackathon/";
+
+
 var token = window.location.toString();
 //var val = "21e532f9ccdafb6c9cbb3e6d54251893ad65b9eb68748015f5eb144eeff88d4a"; 
-var access_token = ""; 
+
 
 var n = token.includes("#access_token=");
  if(n){
 	 var as = token.split("token");
-	 access_token = as[1].replace(/[&\/\\#,+()$~%.'":*?<>{}=]/g, "");
-	
+	 var access_token = as[1].replace(/[&\/\\#,+()$~%.'":*?<>{}=]/g, "");	
+	 $('#access_token').text(access_token);
+	 localStorage.setItem("access_token", access_token);
+	 //alert("token : "+ access_token)
  }
+
+//var access_token = "8972a8973aadc22b129f10ecee6f9f0cbe03b1c81547f77030c72dd4e830bf07";
+access_token = localStorage.getItem("access_token");
+localStorage.setItem("total_pts", total_pts);
+total_pts = localStorage.getItem("total_pts");
+
+function logOut(){	
+	localStorage.removeItem("access_token");
+	window.location.reload();
+	}
 
 function sticky_relocate() {
     var window_top = $(window).scrollTop();

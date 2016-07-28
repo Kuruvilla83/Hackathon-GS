@@ -74,98 +74,94 @@ angular.module('gsApp')
 	
 	$rootScope.stepTwoReady = false;
 	
-			$scope.industries = [{
+	$scope.industries = [{
+		id: 1,
+		value: "Food",
+		subInd: [{
 			id: 1,
-			value: "Food",
-			subInd: [{
-				id: 1,
-				value: "Cakes/Cupcakes/Cookies"
-			},{
-				id: 2,
-				value: "Candy"
-			},{
-				id: 3,
-				value: "Snacks"
-			},{
-				id: 4,
-				value: "Beverage Line"
-			},{
-				id: 5,
-				value: "Food Truck/Food Stand"
-			},{
-				id: 6,
-				value: "Catering"
-			},{
-				id: 7,
-				value: "Food Processing"
-			},{
-				id: 8,
-				value: "Other"
-			}]
+			value: "Cakes/Cupcakes/Cookies"
 		},{
 			id: 2,
-			value: "Retail",
-			subInd: [{
-				id: 1,
-				value: "Apparel Line"
-			},{
-				id: 2,
-				value: "Jewelry Line"
-			},{
-				id: 3,
-				value: "Stationery/Greeting Cards"
-			},{
-				id: 4,
-				value: "Candles"
-			},{
-				id: 5,
-				value: "Decorative Art"
-			},{
-				id: 6,
-				value: "Beauty Products (Hair, Skin)"
-			},{
-				id: 7,
-				value: "Online Retail Shop"
-			},{
-				id: 8,
-				value: "Other"
-			}]
+			value: "Candy"
 		},{
 			id: 3,
-			value: "Service",
-			subInd: [{
-				id: 1,
-				value: "Lawn Care"
-			},{
-				id: 2,
-				value: "Dog Walking/Grooming/Pet Sitting"
-			},{
-				id: 3,
-				value: "Tutoring"
-			},{
-				id: 4,
-				value: "Babysitting"
-			},{
-				id: 5,
-				value: "Tech Support"
-			},{
-				id: 6,
-				value: "Photography/videography"
-			},{
-				id: 7,
-				value: "DIY Classes"
-			},{
-				id: 8,
-				value: "Food Delivery"
-			},{
-				id: 9,
-				value: "Other"
-			}]
+			value: "Snacks"
 		},{
 			id: 4,
-			value: "Other",
-			subInd: null
-		}];
+			value: "Beverage Line"
+		},{
+			id: 5,
+			value: "Food Truck/Food Stand"
+		},{
+			id: 6,
+			value: "Catering"
+		},{
+			id: 7,
+			value: "Food Processing"
+		},{
+			id: 8,
+			value: "Other"
+		}]
+	},{
+		id: 2,
+		value: "Retail",
+		subInd: [{
+			id: 1,
+			value: "Apparel Line"
+		},{
+			id: 2,
+			value: "Jewelry Line"
+		},{
+			id: 3,
+			value: "Stationery/Greeting Cards"
+		},{
+			id: 4,
+			value: "Candles"
+		},{
+			id: 5,
+			value: "Decorative Art"
+		},{
+			id: 6,
+			value: "Beauty Products (Hair, Skin)"
+		},{
+			id: 7,
+			value: "Online Retail Shop"
+		},{
+			id: 8,
+			value: "Other"
+		}]
+	},{
+		id: 3,
+		value: "Service",
+		subInd: [{
+			id: 1,
+			value: "Lawn Care"
+		},{
+			id: 2,
+			value: "Dog Walking/Grooming/Pet Sitting"
+		},{
+			id: 3,
+			value: "Tutoring"
+		},{
+			id: 4,
+			value: "Babysitting"
+		},{
+			id: 5,
+			value: "Tech Support"
+		},{
+			id: 6,
+			value: "Photography/videography"
+		},{
+			id: 7,
+			value: "DIY Classes"
+		},{
+			id: 8,
+			value: "Food Delivery"
+		},{
+			id: 9,
+			value: "Other"
+		}]
+	}];
 	
 	$scope.points = "0";
 	
@@ -190,10 +186,10 @@ angular.module('gsApp')
 		psubIndOther= $scope.subIndOther;
 		pdescription = $scope.description;
 		
-	   $http({
+	    $http({
 		method: 'POST',
 		datatype: "json",
-		url: 'https://ct-staging.hyfnrsx1.com/api/hackathon/saves?access_token='+access_token,
+		url: API_ROOT+'saves?access_token='+access_token,
 		headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
 		data: 'name='+$scope.name+
 				'&data=' + JSON.stringify(res)
@@ -202,8 +198,9 @@ angular.module('gsApp')
 		pid= data.id;
 		pname = data.name;
 		$scope.dialog();
-		//scoringSubmit();
+		scoringSubmit();
 	});
+	
 	
 	$scope.dialog = function (ev) {
 		var confirm = $mdDialog.confirm({
@@ -291,7 +288,7 @@ angular.module('gsApp')
 		}
 	};
 	
-	$scope.SubmitStepTwo = function () {
+	$scope.SubmitStepTwo = function (ev) {
 		
 	    
 		var result = {
@@ -322,50 +319,58 @@ angular.module('gsApp')
 	    $http({
             method: 'PUT',
             datatype: "json",
-            url: 'https://ct-staging.hyfnrsx1.com/api/hackathon/saves/'+pid+'?access_token='+access_token,
+            url: API_ROOT+'saves/'+pid+'?access_token='+access_token,
             headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
             data: 'name=' + pname + 
                   '&data='+JSON.stringify(result) 
 			}).success(function (data) {
 				console.log(data);
-				$scope.showConfirm();
-				//scoringFinalSubmit();
+				$scope.dialogTwo(ev);
+				scoringFinalSubmit();
 			})
 
 	};
 	
-	$scope.showConfirm = function (ev) {
-		var confirm = $mdDialog.confirm()
-          .title('Congratulations!')
-          .textContent('You have completed step 2 of your business idea.')
-          .ariaLabel('Business Plan Complete')
-          .targetEvent(ev)
-          .ok('Save & Exit')
-		$mdDialog.show(confirm).then(function() {
-		  $window.location.href = '#/home';
+	$scope.dialogTwo = function (ev) {
+		var confirm = $mdDialog.confirm({
+			controller: DialogController,
+			templateUrl: 'dialogtmpl2.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+		})
+		$mdDialog.show(confirm).then(function(){
+			$window.location.href = '#/home';
 		});
 	};
-	
+
+
 	function scoringSubmit() {
 		$http({
 		method: 'POST',
 		datatype: "json",
-		url: 'https://ct-staging.hyfnrsx1.com/api/hackathon/scoring?access_token='+access_token+'&event_name=step_1_complete',
+		url: API_ROOT+'scoring?access_token='+access_token+'&event_name=step_1_complete',
 		headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}		
 	}).success(function (response) {
 		console.log(response)
-		pts = response.points_earned;		
-		$("#pts").val(pts);
-		})
+		pts = response.points_earned;
+		total_pts = response.total_points;
+		document.getElementById("pts").innerHTML = "You have earned " +pts + " points";
+		document.getElementById("total_pts").innerHTML = total_pts;		
+		
+		}) 		
 	};
 	function scoringFinalSubmit() {
 		$http({
 		method: 'POST',
 		datatype: "json",
-		url: 'https://ct-staging.hyfnrsx1.com/api/hackathon/scoring?access_token='+access_token+'&event_name=step_2_complete',
+		url: API_ROOT+'scoring?access_token='+access_token+'&event_name=step_2_complete',
 		headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
 	}).success(function (response) {
 		console.log(response)
+		pts = response.points_earned;
+		total_pts = response.total_points;
+		document.getElementById("pts-two").innerHTML = "You have earned " +pts + " points";
+		document.getElementById("total_pts").innerHTML = "Total Points earned: " +total_pts;	
 		})
 	};
 	
@@ -376,16 +381,19 @@ function addExpenseRow(e) {
     var row = angular.element('<tr class="exp-row"><td><input type="text" name="item" id="item" ng-model="item" placeholder="Item/Service" /></td></tr>');
 	var row2 = angular.element('<td><input onBlur="totalExp()" type="number" name="qty" id="qty" class="form-control" ng-model="qty" placeholder="Quantity"/></td>');
 	var row3 = angular.element('<td><input onBlur="totalExp()" type="text" name="price" ng-model="price" class="form-control" id="price" placeholder="Price Per Unit"/></td>');
+	var row4 = angular.element('<td> <input type="button" onclick="removeRow(this)" class="btn btn-danger" id="deleteRow" value="Delete" /></td>');
+	var row5 = angular.element('<td> <input type="button" onclick="removeRow(this)" class="btn btn-danger" id="deleteMobProRow" value="X" /></td>');
     row.append(row2);
 	row.append(row3);
+	row.append(row4);
+	row.append(row5);
 	bod.append(row);
 }
 
 function DialogController($scope, $mdDialog, $window){
 	$scope.exit = function () {
 		$mdDialog.hide();
-	};
-	
+	};	
 	$scope.continuePlan = function (pid) {
 		$mdDialog.hide();
 	}
@@ -395,24 +403,34 @@ function add_handlers() {
         $(e).on('click', addExpenseRow);
     });
 }
+function removeRow(btn) {	
+	var row = btn.parentNode.parentNode;	
+	row.parentNode.removeChild(row);
+	totalExp();
+}
 function getExpenses(scope) {
     var data = {}, cats, ind, subs, lbl, rows, row;
     cats = scope.expCatList;
-    ind = pindustry.value;
+    ind = pindustry.id;
+	//alert(ind);
+    //ind = scope.industry.id;
     //console.log(cats);
     //console.log(cats.length);
-    console.log(ind);
+    //console.log(ind);
+    
     for (var i=0; i<cats.length; i++) {
         if (cats[i].industry == ind) {
             subs = cats[i].expList;
             break;
         }
-    }
+    }    
+    subs = VOCAB.industry[ind-1].expenses;
+    console.log(subs);
     for (var i=0; i<subs.length; i++) {
         lbl = subs[i];
         //console.log(lbl);
         rows = $('#exp'+i).find('tbody tr');
-        //console.log(rows);
+        console.log(rows);
         for (var z=0; z<rows.length; z++) {
             var itm, qty, amt;
             row = $(rows[z]);
@@ -461,5 +479,36 @@ function totalExp () {
 	$('#total').text(total);
 	console.info(total);
 };
+
+function deleteRowExp(t) {
+	var data = {}, ind, subs, rows, row, total = 0;
+	var indId = $('#indId').val();
+	console.info(indId);
+	subs = VOCAB.industry[indId-1].expenses;
+	ind = pindustry.value;
+	
+	//console.log(cats.length);
+	console.log(ind);
+	console.log(subs);
+	
+	for (var i=0; i<subs.length; i++) {
+		
+		rows = $('#exp'+i).find('tbody tr');
+		var row = t.parentNode.parentNode;
+		console.log(row);
+		document.getElementById("#exp"+i).find('tbody tr').delete();		
+		console.log("del");
+		
+		for (var z=0; z<rows.length; z++) {
+			var qty, amt, mult;
+			row = $(rows[z]);
+			alert(row);
+			
+		}
+	}
+	
+};
+
+
 var pid, pname, pidea, pproblem, pfname, pindustry, pindustryOther, psubIndustry, psubIndOther, pdescription ="";
-var pts ="";
+var pts, total_pts="";

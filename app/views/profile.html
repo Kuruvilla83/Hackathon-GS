@@ -25,7 +25,7 @@
 			<p>Select Industry</p>
 			<select name="industry" class="form-control" ng-model="industry" ng-options="ind.value for ind in industries" required>
 			</select>
-			<input ng-show="industry.value == 'Other'" type="text" name="industryOther" id="industryOther" class="form-control" ng-model="industryOther" />
+			
 			<p>Select Sub-Industry</p>
 			<select name="subIndustry" class="form-control" ng-model="subIndustry" ng-options="subInd.value for subInd in industry.subInd" required>
 			</select>
@@ -46,7 +46,7 @@
 				<div class="md-dialog-content">
 					<h3>Congratulations!</h3>
 					<p><b>You have finished step 1 of creating your business plan.</b></p>
-					<p><b>You have earned<div class="pts">{{pts}}</div> <div class="points">{{pts}}</div> points</b></p>
+					<p><div id="pts"></div></p>
 				</div>
 			</md-dialog-content>
 			<md-dialog-actions>
@@ -61,7 +61,7 @@
 
 <div class="col-md-6 col-md-offset-3" ng-controller="ProfileController" ng-show="stepTwoReady">
 	
-	<form name="formtwo" ng-submit="SubmitStepTwo()" role="form">
+	<form name="formtwo" ng-submit="SubmitStepTwo($event)" role="form">
 	<input id="indId" type="hidden" value="{{industryId}}" />
 		<h3>Target Market</h3>
 		<div class="form-group" ng-class="{ 'has-error': formtwo.target.$dirty && formtwo.target.$error.required }">
@@ -151,5 +151,18 @@
             <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-primary">Submit</button>
         </div>
 	</form>
-	
+	<script type="text/ng-template" id="dialogtmpl2.html">
+		<md-dialog>
+			<md-dialog-content>
+				<div class="md-dialog-content">
+					<h3>Congratulations!</h3>
+					<p><b>You have completed step 2 of your business idea.</b></p>
+					<p><div id="pts-two"></div></p>
+				</div>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<a href="#/home"><md-button type="button" class="btn btn-primary" ng-click="exit()">Save & Exit</md-button></a>
+			</md-dialog-actions>
+		</md-dialog>
+	</script>
 </div>

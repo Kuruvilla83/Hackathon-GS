@@ -4,22 +4,24 @@
 	<a class="mainBlock_button" href="/students/sign_in" ><div class="maincon">Login</div></a>
 	<a class="mainBlock_button" href="/students/sign_up?return_to=https://ct-staging.hyfnrsx1.com/dashboard?type=tool" ><div class="maincon">Sign Up</div></a>
 	</div>	
+	
+	<h3 class="mainBlock_title"><a href="https://ct-staging.hyfnrsx1.com/oauth/authorize?client_id=f0718e48ce4b72116906c84ecac5861a755729df090371f74d450050d7a642b2&redirect_uri=https%3A%2F%2Fct-staging.hyfnrsx1.com%2Fhackathon%2Findex.html&response_type=token">Get Connected with GetSchooled</a></h3>
 </div>
 <div class="mainBlockLog" ng-controller="LoginShowCtrl" ng-show="goDogs">
-	<div class="mainBlock_title" ng-controller="LoginShowCtrl" ng-show="goDogs">Welcome to Hackthone Green Harvest ERP</div>
+	<div class="mainBlock_title" ng-controller="LoginShowCtrl" ng-show="goDogs">Welcome to Hackathon Green Harvest ERP</div>
 </div>
 	
 <div ng-controller="gridListDemoCtrl" ng-init="load()">	
 <div class="business" ng-repeat="da in buss" >
 <d-expand-collapse>
-	<div class="tog">
+	<div id= "bor{{da.id}}" class="tog">
 		<span class="faqPlus">
 			<a href="javascript:void(0)" >
-			<div id= "bor" class="first{{$index%2}}" ng-click="detailTask($index)">{{ da.name }}</div>				
+			<div class="first{{$index%2}}" ng-click="detailTask($index)">{{ da.name }}</div>				
 			</a>
 		</span>
 	</div>
-	<div class="businessDe">
+	<div id= "borde{{da.id}}" class="businessDe">
 		<div class="details" id="printthis" ng-show="hdetail">
 			<div class="detailWrapper"><span class="detailTitles">Business Idea: </span><span class="idea">{{idea}}</span></div>
 			<div class="detailWrapper"><span class="detailTitles">Problem: </span><span class="problem">{{problem}}</span></div>
@@ -27,16 +29,16 @@
 			<div class="detailWrapper"><span class="detailTitles">Industry: </span><span class="industry">{{deindustry}}</span></div>
 			<div class="detailWrapper"><span class="detailTitles">Sub-Industry: </span><span class="subIndustry">{{desubcategory}}</span></div>
 			<div class="detailWrapper"><span class="detailTitles">Description: </span><span class="description">{{description}}</span></div>
+			<div class="btns">
 			<span  ng-click="editing = true"> <button value="Send" ng-click="openEdit(da.id)" class="btn btn-warning">Edit</button></span>
 			<span  ng-click="editing = true"> <button value="Send" ng-click="printPage()" class="btn btn-info">Print</button></span>
-			<span ng-controller="deleteserviceCtrl"> <button value="Send" ng-click="deletedata(da.id, name, data)" class="btn btn-danger" id="deleteDanger">Delete</button></span>		
+			<span ng-controller="deleteserviceCtrl"> <button value="Send" ng-click="showDeleteConfirm($event, da.id, name, data)" class="btn btn-danger" id="deleteDanger">Delete</button></span></div>		
 			
 				<div ng-cloak>
 				  <md-content>
 					<md-tabs md-dynamic-height md-border-bottom>
 					  <md-tab label="Market">
 						<md-content class="md-padding">
-						  <h1 class="md-display-2">Market</h1>
 							<div class="detailWrapper"><span class="detailTitles">Target Market: </span><span class="target">{{target}}</span></div>
 							<div class="detailWrapper"><span class="detailTitles">Gender: </span><span class="gender">{{gender}}</span></div>
 							<div class="detailWrapper"><span class="detailTitles">age: </span><span class="gender">{{age}}</span></div>
@@ -50,8 +52,8 @@
 					  </md-tab>
 						<md-tab label="Expenses">
 						<md-content class="md-padding">
-						  <div ng-repeat="tab in expense_rows">
-                            <h3 style="text-align:center">{{tab.expense_cat}}</h3>		                            <h3>{{tab.expense_cat}}</h3>
+						  <div ng-repeat="tab in expense_rows_disp">
+                            <h3 style="text-align:center">{{tab.expense_cat}}</h3>
                             <table class="table" style="width:40%; margin:auto">
                                 <thead>
                                     <tr><td>Item</td><td>Qty</td><td>Price</td></tr>
@@ -70,7 +72,6 @@
 					  </md-tab>
 					  <md-tab label="Promotions">
 						<md-content class="md-padding">
-						  <h1 class="md-display-2">Promotions</h1>
 						  <div class="detailWrapper"><span class="detailTitles">Website: </span><span class="website">{{target}}</span></div>
 							<div class="detailWrapper"><span class="detailTitles">Social Media: </span><span class="social">{{social}}</span></div>
 							<div class="detailWrapper"><span class="detailTitles">Marketing: </span><span class="marketing">{{marketing}}</span></div>
@@ -98,6 +99,8 @@
 				
 				</div>
 				<p>Select Industry</p>
+				<input type="hidden" id="indusId" value="{{industry.id}}" />
+				<input type="hidden" id="indusVal" value="{{industry.value}}" />
 				<select id="industry" ng-model="industry" ng-selected="industry" ng-options="ind.value for ind in industries" class="editControl"  required></select>
 				<input ng-show="industry.value == 'Other'" type="text" name="industryOther" id="industryOther" class="editControl"  ng-model="industryOther" />				
 				<p>Select Sub-Industry</p>
@@ -135,7 +138,7 @@
 				</select>				
 				</br>
 				<h3>Expenses</h3>
-		                <div ng-repeat="tab in expense_rows">
+		                <div class="expmob" ng-repeat="tab in expense_rows_edit">
 		                    <h3>{{tab.expense_cat}}</h3>
 		                    <table class="table" id="edit{{tab.index}}">
 		                        <thead>
@@ -143,20 +146,24 @@
 		                            <th></th>
 		                            <th></th>
 		                            <th>
-		                            <button type="button" class="btn btn-add btn-primary">Add</button>
+		                            <button type="button" ng-click="editExpenseRow(tab.index)" class="btn btn-add btn-primary">Add</button>
 		                            </th>
 		                            </tr>
 		                            <tr><th>Item</th><th>Qty</th><th>Price</th></tr>
 		                        </thead>
+								
 		                        <tbody>
 		                            <tr ng-repeat="row in tab.rows">
 		                                <td><input id="item" name="item" type="text" ng-model="row.item" value="{{row.item}}" /></td>
-		                                <td><input id="qty" name="qty" type="text" ng-model="row.qty" value="{{row.qty}}" /></td>
-		                                <td><input id="price" name="price" type="text" ng-model="row.amt" value="{{row.amt}}" /></td>
+		                                <td><input id="qty" name="qty" type="text" ng-blur="onBlurTotal()" ng-model="row.qty" value="{{row.qty}}" /></td>
+		                                <td><input id="price" name="price" type="text" ng-blur="onBlurTotal()" ng-model="row.amt" value="{{row.amt}}" /></td>
+										<td> <button value="Send" ng-click="deleteRow(tab.index, row.item, row.qty, row.amt)" class="btn btn-danger" id="deleteRow">Delete</button></td>	
+										<td> <button value="Send" ng-click="deleteRow(tab.index, row.item, row.qty, row.amt)" class="btn btn-danger" id="deleteMobRow">X</button></td>
 		                            </tr>
 		                        </tbody>
 		                    </table>
 		                </div>
+						<h3 style="text-align:center">Total: $<span id="totalEdit{{da.id}}" ng-model="total">{{total}}</span></h3>
 				<h3>Promotions</h3>
 				<label for="website">How do you plan on reaching your audience through your website?<label>
 				<textarea id="website" ng-model="website" placeholder="Website" class="editControl" ng-required/></textarea>
@@ -171,7 +178,7 @@
 				<textarea id="advertise" ng-model="advertise" placeholder="Advertise" class="editControl" ng-required/></textarea>
 				<br/>
 				
-				<button type="submit"  ng-click="editBusinessIdea(da.id)" class="btn btn-primary"><a href="#/"></a>Submit</button>
+				<button type="submit"  ng-click="editBusinessIdea(da.id, $event)" class="btn btn-primary"><a href="#/"></a>Submit</button>
 				<button class="btn btn-default" ng-click="cancelEdit()">Cancel</button>
 			 </form>	
 		</div>			

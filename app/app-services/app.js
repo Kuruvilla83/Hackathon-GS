@@ -64,7 +64,7 @@ angular.module('gsApp')
     }
 })
       
-.controller("gridListDemoCtrl", function($scope, $http) {
+.controller("gridListDemoCtrl", function($scope, $http, $window) {
 
     function isArray(value) {
         if (value) {
@@ -77,22 +77,24 @@ angular.module('gsApp')
     var buss, items, det = [];
     var id, name, idea, problem, industry, subCat, logo, desc, subOtherCat, otherindustry;
     $scope.load = function () {        
-        $http.get('https://ct-staging.hyfnrsx1.com/api/hackathon/saves?access_token='+ access_token)
+        $http.get(API_ROOT+'saves?access_token='+ access_token)
         .success(function (data) {
         $scope.buss = data;	
+		
             console.log(data)		
         });
         return buss;			
     };
-	$scope.remove = function(item) {
-		var index = $scope.buss.indexOf(item);		
-		$scope.buss.splice(index, 1)    
+	$scope.remove = function(item) {		
+		$("#bor"+item).fadeOut();
+		$("#borde"+item).fadeOut();		
 	}
 	$scope.detailTask = function(taskId){
 		$scope.hdetail = true;
             $scope.items = $scope.buss[taskId];			
             $scope.name = $scope.items.name;			
             id = $scope.items.id;
+			editId = $scope.items.id;
             if ($scope.items.data) {                			
                 var dta = ($scope.items.data);					
                 if(dta.indexOf("{") > -1 ) {
@@ -114,12 +116,14 @@ angular.module('gsApp')
 					$scope.state = dta.state;
 					$scope.location = dta.location;
 					$scope.comp = dta.comp;
-					$scope.expense_rows = setExpenses(dta);
+					$scope.expense_rows_edit = editExpenses(dta);
+					$scope.expense_rows_disp = setExpenses(dta);
 					$scope.total = getTotal(dta);
 					$scope.website = dta.website;
 					$scope.social = dta.social;
 					$scope.marketing = dta.marketing;
 					$scope.advertise = dta.advertise;
+					
 					$scope.industries = [{
 					id: 1,
 					value: "Food",
@@ -207,11 +211,8 @@ angular.module('gsApp')
 							id: 9,
 							value: "Other"
 							}]
-					},{
-					id: 4,
-					value: "Other",
-					subInd: null
 					}];
+					
 					$scope.genderOptions = ["Male", "Female", "Both"];
 					$scope.ageOptions = ["Preteens", "Teens", "Adults", "All Groups"];
 					$scope.locTypes = ["Virtual Location", "Physical Location", "Both"];
@@ -247,7 +248,9 @@ angular.module('gsApp')
 	$scope.openEdit = function(taskId){
         $scope.visible = true;
         $scope.sedit = true;
-        $scope.hdetail = false; 				
+        $scope.hdetail = false;
+		
+        //$scope.edit_handlers();
     };
      $scope.cancelEdit = function(){			
         $scope.sedit = false;
@@ -259,13 +262,15 @@ angular.module('gsApp')
 		popupWin.window.focus();
 		popupWin.document.open();
 		popupWin.document.write('<!DOCTYPE html><html><head><title>TITLE OF THE PRINT OUT</title>' +
-			'<link rel="stylesheet" type="text/css" href="app/directory/file.css" />' +
+			'<link rel="stylesheet" type="text/css" href="app-content/file.css" />' +
 			'</head><body onload="window.print(); window.close();"><div>' + printContents + '</div></html>');
 		popupWin.document.close();
 		};
 })
 
-.controller("editController",['$scope', '$http', 'fileUpload', function($scope, $http, fileUpload){
+.controller("editController",['$scope', '$http', 'fileUpload', '$compile', '$mdDialog', '$window', function($scope, $http, fileUpload, $compile, $mdDialog, $window){
+	//$compile('#edit'+0)($scope);
+	
 	var put_url = null;
 	var get_url = null;
 	$scope.EditUploadFile = function () {
@@ -297,7 +302,7 @@ angular.module('gsApp')
           })
 	};
     
-    $scope.editBusinessIdea = function (taskId) {
+    $scope.editBusinessIdea = function (taskId, ev) {
         $scope.sedit = true; 
 		//alert($scope.logo +"  "+ get_url);
 		var res = {
@@ -319,32 +324,167 @@ angular.module('gsApp')
 			website: $scope.website,
 			social: $scope.social,
 			marketing: $scope.marketing,
-			advertise: $scope.advertise
+			advertise: $scope.advertise,
+            expenses: $scope.getExpenses2($scope)
 		};      
-	console.log(res);
-		    
+		console.log(res);	    
         $http({
             method: 'PUT',
             datatype: "json",
-            url: 'https://ct-staging.hyfnrsx1.com/api/hackathon/saves/'+taskId+'?access_token='+ access_token,
+            url: API_ROOT+'saves/'+taskId+'?access_token='+ access_token,
             headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
             data: 'name='+$scope.name+
                   '&data='+JSON.stringify(res)
-        }).success(function (data) {
-			window.location.reload();
+        }).success(function (data, ev) {
+			$scope.showConfirm(ev, data);
+        });		
+    };
+	
+	$scope.showConfirm = function (ev, data) {
+		var confirm = $mdDialog.confirm()
+          .title('Success!')
+          .textContent('You have completed editing your business idea.')
+          .ariaLabel('Business Plan Complete')
+          .targetEvent(ev)
+          .ok('Confirm')
+		$mdDialog.show(confirm).then(function() {
+			$scope.total = getTotal(data);
+			$window.location.href = '#/home';
             $scope.sedit = false;
             $scope.hdetail = true;						
-            console.log(data)
-        });
-		
-    };
- 
+            console.log(data);
+		});
+	};
+	
+	$scope.editExpenseRow =function(idx) {
+		console.log(idx);
+		if(!$scope.expense_rows_edit[idx].rows){
+			console.log("inside");
+			$scope.expense_rows_edit[idx].rows = [];
+		}
+		var cat = $scope.expense_rows_edit[idx];
+		console.log(cat);		
+		cat.rows.push({
+                    item: '',
+                    qty: '',
+                    amt: ''
+                });			
+};
+	$scope.deleteRow =function(idx, itm, qty, pri) {			
+		var cat = $scope.expense_rows_edit[idx];
+		var total ="";		
+		var index = "";		
+		var comArr = $scope.expense_rows_edit[idx].rows;		
+		for( var i = 0; i < comArr.length; i++ ) {			
+			if( comArr[i].item === itm ) {				
+				index = i;
+				var mult = parseFloat((0+qty) * (0+pri));							
+				$scope.total = $scope.total - mult;				
+				break;
+			}			
+		}
+		if( index === -1 ) {
+			alert( "Something gone wrong" );
+		}		
+		$scope.expense_rows_edit[idx].rows.splice(index, 1);			
+		//onBlurTotal();
+	};
+	$scope.onBlurTotal = function () {
+		var data = {}, ind, subs, rows, row, total = 0;
+		var indId = $('#indusId').val();
+		subs = VOCAB.industry[indId-1].expenses;		
+		ind = $('#indusVal').val();
+		for (var i=0; i<subs.length; i++) {			
+			rows = $("#edit"+i).find("tbody tr");			
+			for (var z=0; z<rows.length; z++) {
+				var qty, amt, mult;
+				row = $(rows[z]);
+				qty = row.find('#qty').val();
+				amt = row.find('#price').val();
+				if (!qty || !amt){
+					return;
+				}
+				mult = parseFloat((0+qty) * (0+amt));
+				total+=mult;
+			}
+		}
+		total = total.toFixed(2);			
+		$scope.total = total;	
+	}
+//$scope.edit_handlers();
+ $scope.getExpenses2 = function (scope) {
+	 //$compile('.table')(scope);
+	 //scope.$apply();
+    var data = {}, cats, ind, subs, lbl, tab, rows, row;
+    cats = scope.expCatList;
+    //ind = pindustry.value;
+    ind = scope.industry.id;
+    //console.log(cats);
+    //console.log(cats.length);
+    //console.log(ind);
+    /*
+    for (var i=0; i<cats.length; i++) {
+        if (cats[i].industry == ind) {
+            subs = cats[i].expList;
+            break;
+        }
+    }
+    */
+    console.log('get2');
+    subs = VOCAB.industry[ind-1].expenses;
+    console.log(subs);
+    for (var i=0; i<subs.length; i++) {
+        lbl = subs[i];
+        //console.log(lbl);		
+        tab = $('#edit'+i);
+        console.log(tab);
+        rows = tab.find('tbody tr');
+        //console.log(rows);
+        for (var z=0; z<rows.length; z++) {
+            var itm, qty, amt;
+            row = $(rows[z]);
+            //console.log(row);            
+            itm = row.find('#item').val();
+            qty = row.find('#qty').val();
+            amt = row.find('#price').val();
+            /*
+            itm = row.find('#item');
+            qty = row.find('#qty');
+            amt = row.find('#price');*/
+			
+            console.log(itm, qty, amt);
+            console.info(itm +' - '+qty+' * '+amt);
+            if (!data[i]) {
+                data[i] = [];
+            }
+            data[i].push(Array(itm, qty, amt));
+        }
+    }
+    console.log(data);
+    return data;
+};
+
 }])
 
-.controller('deleteserviceCtrl', function ($scope, $http) {
+.controller('deleteserviceCtrl', function ($scope, $http, $mdDialog) {
     $scope.name = null;
     $scope.data = null;
-
+	
+	$scope.showDeleteConfirm = function (ev, taskId, name, data) {
+		var confirm = $mdDialog.confirm()
+          .title('Are you sure you want to delete this business plan?')
+          .ariaLabel('Confirm delete')
+          .targetEvent(ev)
+          .ok('Confirm')
+          .cancel('Cancel');
+		$mdDialog.show(confirm).then(function() {
+		  $scope.deletedata(taskId, name, data);
+		  //window.location.reload();
+		}, function() {
+		  $mdDialog.cancel();
+		});
+	}
+	
     $scope.deletedata = function (taskId, name, data) {			
         var data = {
             name: name,
@@ -352,7 +492,7 @@ angular.module('gsApp')
         };	
 		$scope.remove(taskId);	
         //Call the service to delete data
-        $http.delete('https://ct-staging.hyfnrsx1.com/api/hackathon/saves/'+taskId+'?access_token='+ access_token, JSON.stringify(data)).then(function (response) {
+        $http.delete(API_ROOT+'/saves/'+taskId+'?access_token='+ access_token, JSON.stringify(data)).then(function (response) {
             if (response.data)
                 $scope.msg = "Data Deleted Successfully!";
         }, function (response) {
@@ -360,9 +500,22 @@ angular.module('gsApp')
         $scope.statusval = response.status;
         $scope.statustext = response.statusText;
         $scope.headers = response.headers();
-        });		
-		window.location.reload();		
+        });	
+		//$window.location.href = '#/home';		
     };
+	
+	$scope.showConfirm = function (ev) {
+		var confirm = $mdDialog.confirm()
+		  .title('Are you sure?')		  
+		  .targetEvent(ev)
+		  $scope.deletedata()
+		  .ok('Save & Exit')
+		$mdDialog.show(confirm).then(function() {
+		  $window.location.href = '#/home';
+		});
+	};
+	
+	
 
 })
 
@@ -371,12 +524,12 @@ angular.module('gsApp')
         restrict: 'EA',
         link: function(scope, element, attrs){
             $(".tog").click( function() {
-				$('html,body').animate({scrollTop: $(this).offset().top}, 100);				
+				$('html,body').animate({scrollTop: $(this).offset().top}, 10);				
                 $(this).parent().find(".businessDe").removeClass('businessDe').addClass('businessDe1');					
                 $(element).find(".businessDe1").slideToggle('200',function() {            
                     $(element).find("span").toggleClass('faqPlus faqMinus');
 					$("div.business").find(".businessDe").css({"display":"none","border": "2px solid green"});	
-					$('html,body').animate({scrollTop: $(this).offset().top}, 100);			
+					$('html,body').animate({scrollTop: $(this).offset().top}, 10);			
                 });
                 if($("div.businessDe1:visible").length>1) {
                     $(this).siblings().find(".businessDe1").slideUp('slow');						
@@ -387,6 +540,37 @@ angular.module('gsApp')
     }
 });
 
+function editExpenses(data) 
+{
+	
+    var R=[], subs, row, rows;
+    subs = VOCAB.industry[data.industry.id-1].expenses;
+    for (var i=0; i<subs.length; i++) {
+        row = {};
+        row.index = i;
+        row.expense_cat = subs[i];
+		if (!data.expenses) {
+			//donothing;
+		}else		
+        if (data.expenses[i]) {
+            //console.log(data.expenses[i]);
+            rows = [];
+            for (var j=0; j<data.expenses[i].length; j++) {
+                var tmp = data.expenses[i][j];
+                //console.log(tmp);
+                rows.push({
+                    item: tmp[0],
+                    qty: tmp[1],
+                    amt: tmp[2]
+                });
+            }
+            row.rows = rows;
+        }
+        R.push(row);
+    }
+    //console.log(R);
+    return R;
+}
 function setExpenses(data) 
 {
     if (!data) return;
@@ -412,7 +596,58 @@ function setExpenses(data)
     console.log(R);
     return R;
 }
-
+/*
+function getExpenses2(scope, $compile) {
+    var data = {}, cats, ind, subs, lbl, tab, rows, row;
+    cats = scope.expCatList;
+    //ind = pindustry.value;
+    ind = scope.industry.id;
+    //console.log(cats);
+    //console.log(cats.length);
+    //console.log(ind);
+    
+    for (var i=0; i<cats.length; i++) {
+        if (cats[i].industry == ind) {
+            subs = cats[i].expList;
+            break;
+        }
+    }
+    
+    console.log('get2');
+    subs = VOCAB.industry[ind-1].expenses;
+    console.log(subs);
+    for (var i=0; i<subs.length; i++) {
+        lbl = subs[i];
+        //console.log(lbl);
+		$compile('#edit'+i)(scope);
+        tab = $('#edit'+i);
+        console.log(tab);
+        rows = tab.find('tbody tr');
+        //console.log(rows);
+        for (var z=0; z<rows.length; z++) {
+            var itm, qty, amt;
+            row = $(rows[z]);
+            //console.log(row);            
+            itm = row.find('#item').val();
+            qty = row.find('#qty').val();
+            amt = row.find('#price').val();
+            /*
+            itm = row.find('#item');
+            qty = row.find('#qty');
+            amt = row.find('#price');
+			
+            console.log(itm, qty, amt);
+            console.info(itm +' - '+qty+' * '+amt);
+            if (!data[i]) {
+                data[i] = [];
+            }
+            data[i].push(Array(itm, qty, amt));
+        }
+    }
+    console.log(data);
+    return data;
+}
+*/
 function getTotal(data)
 {
     if (!data) return;
@@ -427,3 +662,41 @@ function getTotal(data)
     }
     return total.toFixed(2);
 }
+/*
+function onBlurTotal(eid)
+{
+	var data = {}, ind, subs, rows, row, total = 0;
+	var indId = $('#indusId').val();
+	console.info("industry id is: " + indId);
+	
+	subs = VOCAB.industry[indId-1].expenses;
+	
+	ind = $('#indusVal').val();
+	console.info("industry is: " + ind);
+
+	
+	for (var i=0; i<subs.length; i++) {
+		
+		rows = $("#edit"+i).find("tbody tr");
+		console.info(rows);
+		for (var z=0; z<rows.length; z++) {
+			var qty, amt, mult;
+			row = $(rows[z]);
+			qty = row.find('#qty').val();
+			amt = row.find('#price').val();
+			if (!qty || !amt){
+				return;
+			}
+			mult = parseFloat((0+qty) * (0+amt));
+			total+=mult;
+		}
+	}
+	total = total.toFixed(2);
+	console.info(total);	
+	$("#totalEdit"+eid).text(total);	
+
+	var oldTotal = $('#totalEdit'+eid);
+	console.info(oldTotal.text());
+}
+*/
+var editId="";

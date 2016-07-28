@@ -5,7 +5,8 @@ font-family:lucida grande;
     background-color: black;
     min-height: 60px;
     position: relative;
-    z-index: 20;	
+    z-index: 20;
+	margin-top: -10px;
 }
 
 .main-header .logo {
@@ -22,7 +23,7 @@ font-family:lucida grande;
 }
 
 .mainBlock {
-    border: 3px solid #e7e7e7;
+    border: none;
     padding: 20px;
     text-align: center;
 	border-radius: 10px;
@@ -157,6 +158,35 @@ border-bottom-right-radius: 2px;
 .container {
     border: none;    
 }
+
+#item{
+width: 110px;
+}
+#qty{
+width: 40px;
+}
+#price{
+width: 40px;
+}
+#deleteRow{
+display:none;
+}
+#deleteMobRow{
+margin-left: -35px;
+margin-top: 5px;
+display:block;
+}
+#deleteMobProRow{
+margin-left: -15px;
+margin-top: 0px;
+display:block;
+}
+.table{
+margin-left: -23px;
+}
+.ptable{
+margin-left: -23px;
+}
 .first1 {
   font-size: 150%;
   width:100%; 
@@ -269,13 +299,83 @@ width: 15.5rem;
     left: 0;
     margin: 0 -10px 0 70px;
     position: relative;
+	z-index: 1;
 }
 .navbar {
     border: 1px solid transparent;
     height: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     position: relative;
 }
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
 	border-color:none;
+}
+.deleteditem{
+display:none;
+}
+#output-image {
+    height: 100px;
+    width: 100px;
+}
+.logo {
+    height: 180px;
+    width: 180px;
+}
+.edit_logo {
+    height: 180px;
+    width: 180px;
+}
+#output-image{
+ height: 180px;
+    width: 180px;
+}
+.editControl, input{
+	height: 34px;
+	}
+#city{
+	height: 34px;
+	}
+#state{
+	height: 34px;
+	}
+#item{
+height: 34px;
+}
+#qty{
+height: 34px;
+}
+#price{
+height: 34px;
+}
+#access_token{
+display: block;
+}
+#pts {
+    font-size: 20px;
+}
+#total_pts {
+    color: white;
+    float: right;
+	size:30px;
+}
+#totalpts {
+    color: white;
+    float: right;
+	size:30px;
+}
+#signout_btn{
+	float: right;
+    height: 40px;
+    margin: 10px;
+	}
+.btns {
+    margin-bottom: 30px;
+}
+@media (min-width: 400px) and (max-width: 10000px) {
+	#deleteMobRow{
+	display:none;
+	}
+	#deleteMobProRow{
+	display:none;
+	}
 }
