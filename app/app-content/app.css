@@ -152,6 +152,17 @@ border-bottom-right-radius: 2px;
     border-left:none; 
 	border-right:none;	
 }
+#loading {
+	display:none;
+	position:fixed;
+	top:250px !important;
+	right:-190px !important;
+	width:100%;
+	height:100%; 	
+	background-repeat:no-repeat;
+	background-position:center;
+	z-index:10000000;
+	}
 }
 @media (max-width: 399px){
 .newpro  img{margin-left: 100px;}
