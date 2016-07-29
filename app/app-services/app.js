@@ -116,6 +116,9 @@ angular.module('gsApp')
 					$scope.target = dta.target;
 					if(!$scope.target){
 						scoreSet = true;
+						alert("ttt" + scoreSet);
+					}else{
+						scoreSet = false;
 					}
 					$scope.gender = dta.gender;
 					$scope.age = dta.age;
@@ -347,7 +350,7 @@ angular.module('gsApp')
         }).success(function (data, ev) {
 			if(scoreSet){
 				editScoringFinalSubmit();
-				$scope.dialogThree(ev);
+				$scope.dialogThree(ev);				
 			} else {			
 			$scope.showConfirm(ev, data);
 			}
