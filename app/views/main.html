@@ -1,5 +1,5 @@
 <div class="mainBlock" ng-controller="LoginShowCtrl" ng-show="goCats">		
-	<div class="mainBlock_title">Please login to Hackthone Green Harvest ERP</div>	  
+	<div class="mainBlock_title">Please login to Hackathon Green Harvest ERP</div>	  
 	<div>
 	<a class="mainBlock_button" href="/students/sign_in" ><div class="maincon">Login</div></a>
 	<a class="mainBlock_button" href="/students/sign_up?return_to=https://ct-staging.hyfnrsx1.com/dashboard?type=tool" ><div class="maincon">Sign Up</div></a>
@@ -182,7 +182,21 @@
 				
 				<button type="submit"  ng-click="editBusinessIdea(da.id, $event)" class="btn btn-primary"><a href="#/"></a>Submit</button>
 				<button class="btn btn-default" ng-click="cancelEdit()">Cancel</button>
-			 </form>	
+			 </form>
+	<script type="text/ng-template" id="dialogtmpl3.html">
+		<md-dialog>
+			<md-dialog-content>
+				<div class="md-dialog-content">
+					<h3>Congratulations!</h3>
+					<p><b>You have completed step 2 of your business idea.</b></p>
+					<p><div id="pts-two"></div></p>
+				</div>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<a href="#/home"><md-button type="button" class="btn btn-primary" ng-click="exit()">Save & Exit</md-button></a>
+			</md-dialog-actions>
+		</md-dialog>
+	</script>			 
 		</div>			
 		</div>		
 	 </div>	

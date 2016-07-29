@@ -114,6 +114,9 @@ angular.module('gsApp')
 					}                    
 					$scope.description = dta.description;
 					$scope.target = dta.target;
+					if(!$scope.target){
+						scoreSet = true;
+					}
 					$scope.gender = dta.gender;
 					$scope.age = dta.age;
 					$scope.city = dta.city;
@@ -341,8 +344,13 @@ angular.module('gsApp')
             headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
             data: 'name='+$scope.name+
                   '&data='+JSON.stringify(res)
-        }).success(function (data, ev) {					
+        }).success(function (data, ev) {
+			if(scoreSet){
+				editScoringFinalSubmit();
+				$scope.dialogThree(ev);
+			} else {			
 			$scope.showConfirm(ev, data);
+			}
 			$('#loading').css('display','none');
 			$('.business').css({'opacity': '1', 'pointers-events': 'auto'});
         });		
@@ -363,7 +371,31 @@ angular.module('gsApp')
             console.log(data);
 		});
 	};
-	
+	$scope.dialogThree = function (ev) {
+		var confirm = $mdDialog.confirm({
+			controller: DialogController,
+			templateUrl: 'dialogtmpl3.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+		})
+		$mdDialog.show(confirm).then(function(){
+			$window.location.href = '#/home';
+		});
+	};
+	function editScoringFinalSubmit() {
+		$http({
+		method: 'POST',
+		datatype: "json",
+		url: API_ROOT+'scoring?access_token='+access_token+'&event_name=step_2_complete',
+		headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
+	}).success(function (response) {
+		console.log(response)
+		pts = response.points_earned;
+		total_pts = response.total_points;
+		document.getElementById("pts-two").innerHTML = "You have earned " +pts + " points";
+		//document.getElementById("total_pts").innerHTML = "Total Points earned: " +total_pts;	
+		})
+	};
 	$scope.editExpenseRow =function(idx) {
 		console.log(idx);
 		if(!$scope.expense_rows_edit[idx].rows){
@@ -707,4 +739,4 @@ function onBlurTotal(eid)
 	console.info(oldTotal.text());
 }
 */
-var editId="";
+var editId, scoreSet="";

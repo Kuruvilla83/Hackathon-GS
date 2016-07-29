@@ -46,7 +46,7 @@
           <a class="navbar-brand" ui-sref="home">Hackathon </a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div ng-controller="LoginShowCtrl" ng-show="goDogs"  class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
+        <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
          <ul class="nav navbar-nav navbar-right">
             <li dropdown="">
               <a href="#/">Home
@@ -54,13 +54,13 @@
               </a>
               <tree tree="tree"></tree>
             </li>
-            <li dropdown="">
+            <li dropdown="" ng-controller="LoginShowCtrl" ng-show="goDogs">
               <a ng-href="#/profile">Profile
                  <span class="caret"></span>
               </a>
               <tree tree="tree"></tree>
             </li>
-			<li dropdown="">
+			<li dropdown="" ng-controller="LoginShowCtrl" ng-show="goDogs">
               <a ng-href="#/home" onclick="logOut()">Sign Out                 
               </a>
               
@@ -82,7 +82,7 @@
     </div>
 <div id="loading">  
 	<img alt="Loading.... " src="icons/preloader2.gif">		
-			</div>	
+</div>	
     <div class="credits text-center">
         
         <p>
