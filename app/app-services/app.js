@@ -115,8 +115,7 @@ angular.module('gsApp')
 					$scope.description = dta.description;
 					$scope.target = dta.target;
 					if(!$scope.target){
-						scoreSet = true;
-						alert("ttt" + scoreSet);
+						scoreSet = true;						
 					}else{
 						scoreSet = false;
 					}
