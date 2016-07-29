@@ -77,11 +77,15 @@ angular.module('gsApp')
     var buss, items, det = [];
     var id, name, idea, problem, industry, subCat, logo, desc, subOtherCat, otherindustry;
     $scope.load = function () {
-		$('#loading').css('display','block');        
+		if (!access_token){
+         $('#loading').css('display','none'); 
+		} else {
+        $('#loading').css('display','block');
+		}
         $http.get(API_ROOT+'saves?access_token='+ access_token)
         .success(function (data) {
         $scope.buss = data;	
-		$('#loading').css('display','none');         		
+		 $('#loading').css('display','none');         		
         });
         return buss;			
     };
